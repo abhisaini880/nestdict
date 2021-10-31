@@ -1,70 +1,58 @@
 """ 
-## Implementation for FIND_IN_MAP Function 
+# Implementation of check_keys function
 
-* Basic functionality for FIND_IN_MAP function is to search nested dicts
-    or nested key-value pair.  
+    * This Function will check for the keys in dictionary
+        and return True if all keys are found. 
+    
+    * It's a atomic function means it will only return True
+        if all keys are found in the object else False.
+    
+    * It can also check for nested keys.
 
-* It accepts muliple args in which first arg is the dict object and rest
-    are the keys in dict object.
-
-* find_in_map(dict_obj, parent_key, child_key, child_key_2) --> It returns
-    the value for child_key_2 value
-
-* In case the result is not found then return NULL
-
-* It can be used to find the value of nested key or search for nested key if present.
 """
 
 
-def find_in_map(obj, *args):
-    """
-    It accepts the dict object and nested keys and return the value
-    of last key if present in nested key is present in object.
+def check_keys(required_key_list, obj):
+    """This function will accept two params
+        and return a boolean value.
+        * It will check if all keys are present in the object
 
     Args:
-        obj (dict): dict object
+        required_key_list (list): list of required keys
+        obj (dict): dictionary object to be checked.
 
-    Returns: Value of last nested key
+    Returns:
+        bool: True if all keys are present else False
     """
-    if not isinstance(obj, dict):
-        # raise InvalidRequestException
-        print("Exception raised !")
-        return
-
-    nested_keys = list(args)
-
-    for key in nested_keys:
-        obj = _iterate_over_nested_obj(obj, key)
-        if obj is None:
-            return
-
-    return obj
+    key_from_obj = set()
+    for key in _recursive_items(dictionary=obj):
+        key_from_obj.add(key)
+    for key in required_key_list:
+        if key not in key_from_obj:
+            return False
+    return True
 
 
-def _iterate_over_nested_obj(obj, key):
-    """It iterates over the nested dict object.
-    It iterates over two types of data
-    * list
-    * dict
-
-    for the rest data type it returns the value
+def _recursive_items(dictionary):
+    """This function will accept the dictionary
+        and iterate over it and yield all the keys
 
     Args:
-        obj (any type): object to process
-        key (str, int): key to find in object
-    """
+        dictionary (dict): dictionary to iterate
 
-    if isinstance(obj, dict):
-        if obj.get(key):
-            return obj[key]
-    elif isinstance(obj, list):
-        for item in obj:
-            value = _iterate_over_nested_obj(item, key)
-            if value:
-                return value
-        return None
-    else:
-        return None
+    Yields:
+        string: key in dictionary object.
+    """
+    for key, value in dictionary.items():
+        yield key
+        if isinstance(value, dict):
+            yield from _recursive_items(value)
+        elif isinstance(value, list):
+            for item in value:
+                if isinstance(item, dict):
+                    yield from _recursive_items(item)
+        else:
+            yield key
 
 
 if __name__ == "__main__":
@@ -124,14 +112,5 @@ if __name__ == "__main__":
             }
         ]
     }
-    print(
-        find_in_map(
-            obj,
-            "problems",
-            "Diabetes",
-            "medications",
-            "medicationsClasses",
-            "className2",
-            "associatedDrug",
-        )
-    )
+
+    print(check_keys(["medications", "name"], obj))
