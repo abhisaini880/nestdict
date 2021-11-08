@@ -7,6 +7,8 @@
 
 """
 
+__all__ = ["all_keys"]
+
 
 def _recursive_items(dictionary):
     """This function will accept the dictionary
