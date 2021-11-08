@@ -1,9 +1,9 @@
-# Dictify
+# Nestdict
 ## _Makes Nested Dictionaries Easy To Use_
 
 [![Python](https://www.python.org/static/community_logos/python-powered-w-140x56.png)](https://docs.python.org/3/)
 
-Dictify is used to simplify various operations on nested and plain dictionaries.
+Nestdict is used to simplify various operations on nested and plain dictionaries.
 It offers various functions to simplify your work.
 
 - Pass the dictionary object in the function of your need.
@@ -58,18 +58,18 @@ It offers various functions to simplify your work.
 
 ## Installation
 
-Dictify requires Python3.6 +
+Nestdict requires Python3.6 +
 
 Install using pip
 
 ```sh
-pip install dictify
+pip install nestdict
 ```
 
-Import functions from dictify
+Import functions from nestdict
 
 ```py
-from dictify import find_in_map,check_keys
+from nestdict import find_in_map,check_keys
 ```
 
 ## Development

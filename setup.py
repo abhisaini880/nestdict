@@ -4,10 +4,10 @@ from setuptools import setup, find_packages
 HERE = pathlib.Path(__file__).parent
 
 VERSION = "0.1.0"
-PACKAGE_NAME = "dictify"
+PACKAGE_NAME = "nestdict"
 AUTHOR = "Abhishek Saini"
 AUTHOR_EMAIL = "abhisaini880@email.com"
-URL = "https://github.com/abhisaini880/dictify"
+URL = "https://github.com/abhisaini880/nestdict"
 
 LICENSE = "Apache License 2.0"
 DESCRIPTION = (
