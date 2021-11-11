@@ -15,6 +15,24 @@ def change_value(obj,*args,value):
          *args (list) = must pass the keys in a list.
          value = value to replace insitited of old value
          
+       Note: *args must be in correct order.
+       example:
+             dic = {
+                   "cars_owned :{
+                   "sedan":1,
+                   "suv":3
+                   },
+                }
+             print("original :", dic)
+             print(nestdict.change_value(dic,["cars_owned","suv"],value = 100))
+             #the elements inside the list must follow the correct order.
+             
+       output:
+       original : {"cars_owned":{"sedan":1,"suv":3},}
+       {"cars_owned":{"sedan":1,"suv":100},}
+       
+       
+         
       for more understanding read README.md
       """
 
