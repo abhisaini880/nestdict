@@ -59,16 +59,18 @@ It offers various functions to simplify your work.
 - *change_value(dict_obj, [key1, key2, ...],value)* `replaces a particular key's value in the dict_obj`
     ```py
     obj = {
+        "cars_owned":{
          "sedan": 1,
          "suv": 3,
          "hatchback": 2,
-         }
+         },
+     }
    
-   change_value_of_suv = change_value(obj, ["sedan", "suv"],value=100)
+   change_value_of_suv = change_value(obj, ["cars_owned", "sedan", "suv"],value=100)
    
    print(change_value_of_suv) >> {"cars_owned":{"sedan":1,"suv":100,"hatchback":2},}
    
-   change_value_of_sedan  = change_value(obj,["sedan"],value = 50)
+   change_value_of_sedan  = change_value(obj,["cars_owned","sedan"],value = 50)
    
    print(change_value_of_sedan) >> {"cars_owned":{"sedan":50,"suv":3,"hatchback":2},}
    ```
