@@ -11,11 +11,13 @@ def change_value(obj,*args,value):
        of the key.
        
        Arg:
+       
          obj (dict) = dictionary object.
          *args (list) = must pass the keys in a list.
          value = value to replace insitited of old value
          
        Note: *args must be in correct order.
+       
        Use Case:
              dic = {
                    "cars_owned :{
