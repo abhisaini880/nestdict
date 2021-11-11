@@ -66,7 +66,7 @@ It offers various functions to simplify your work.
          },
      }
    
-   change_value_of_suv = change_value(obj, ["cars_owned", "sedan", "suv"],value=100)
+   change_value_of_suv = change_value(obj, ["cars_owned", "suv"],value=100)
    
    print(change_value_of_suv) >> {"cars_owned":{"sedan":1,"suv":100,"hatchback":2},}
    
