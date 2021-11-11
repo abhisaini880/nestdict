@@ -1,5 +1,22 @@
+"""# implementation of change_value function
 
+    * it changes the value of a particular key and returns the dictionary back.
+    * it also works with nested list.
+"""
+    
 def change_value(obj,*args,value):
+    
+    """This function accept three params
+       and iterats over the obj(dict) and replace value
+       of the key.
+       
+       Arg:
+         obj (dict) = dictionary object.
+         *args (list) = must pass the keys in a list.
+         value = value to replace insitited of old value
+         
+      for more understanding read README.md
+      """
 
     changed_obj = obj
     
