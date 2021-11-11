@@ -1,7 +1,7 @@
 """# implementation of change_value function
 
     * it changes the value of a particular key and returns the dictionary back.
-    * it also works with nested list.
+    * it also works with nested dictionary.
 """
     
 def change_value(obj,*args,value):
