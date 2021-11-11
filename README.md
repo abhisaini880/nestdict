@@ -62,7 +62,7 @@ It offers various functions to simplify your work.
         "cars_owned":{
          "sedan": 1,
          "suv": 3,
-         "hatchback": 2,
+         "hatchback": 2
          },
      }
    
