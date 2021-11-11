@@ -70,9 +70,8 @@ It offers various functions to simplify your work.
    
    print(change_value_of_suv) >> {"cars_owned":{"sedan":1,"suv":100,"hatchback":2},}
    
-   change_value_of_sedan  = change_value(obj,["cars_owned","sedan"],value = 50)
    
-   print(change_value_of_sedan) >> {"cars_owned":{"sedan":50,"suv":3,"hatchback":2},}
+   
    ```
 
 ## Installation
