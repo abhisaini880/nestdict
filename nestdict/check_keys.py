@@ -26,6 +26,12 @@ def check_keys(obj, required_key_list):
     Returns:
         bool: True if all keys are present else False
     """
+    if not isinstance(obj, dict):
+        raise ValueError("Dictionary object is required !")
+
+    if not isinstance(required_key_list, list):
+        raise ValueError("List of strings is required !")
+
     key_from_obj = set()
     for key in _recursive_items(dictionary=obj):
         key_from_obj.add(key)
