@@ -86,7 +86,7 @@ def change_value(obj,*args,value):
                         obj[keys[-1]] = value
                         break
                 else:
-                    return None
+                    continue
             else:
                 return None
             
