@@ -1,6 +1,6 @@
 """# implementation of change_value function
 
-    * It changes the value of a perticular key and returns back the dictionary back.
+    * It changes the value of a perticular key and returns back the dictionary.
     * It also works with nested dictionary.
 
     USECASE 1:
