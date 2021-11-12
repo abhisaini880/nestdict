@@ -26,8 +26,8 @@ def check_keys(obj, required_key_list):
     Returns:
         bool: True if all keys are present else False
     """
-    if not isinstance(obj, dict):
-        raise ValueError("Dictionary object is required !")
+    if not (isinstance(obj, dict) or isinstance(obj, list)):
+        raise ValueError("Dictionary/List of dict object is required !")
 
     if not isinstance(required_key_list, list):
         raise ValueError("List of strings is required !")
