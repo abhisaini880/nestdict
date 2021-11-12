@@ -28,7 +28,7 @@ def find_in_map(obj, *args):
 
     Returns: Value of last nested key
     """
-    if not isinstance(obj, dict):
+    if not (isinstance(obj, dict) or isinstance(obj, dict)):
         # raise InvalidRequestException
         print("Exception raised !")
         return
