@@ -70,7 +70,7 @@ It offers various functions to simplify your work.
    
    print(change_value_of_suv) >> {"cars_owned":{"sedan":1,"suv":100,"hatchback":2},}
    
-- *change_key(dict,from_old_key, to_new_key)*`replaces a particular key.
+- *change_key(dict,from_old_key, to_new_key)* `replaces a particular key.`
    ```py
    
    obj = {
