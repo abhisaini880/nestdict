@@ -49,7 +49,7 @@
         
 """
 
-def change_key(obj,old_key,new_key):
+def change_key(obj,from_old_key,to_new_key):
 
     """
        This function accept three params
@@ -59,18 +59,18 @@ def change_key(obj,old_key,new_key):
        Arg:
 
            obj (dict) : dictionary object
-           old_key : pass the key the you wanted to change.
-           new_key : pass the new key to replace insisted of old key.
+           from_old_key : pass the key the you wanted to change.
+           to_new_key : pass the new key to replace insisted of old key.
 
         for more understanding see README.md
     """
 
     for key,value in obj.items():
-        if key == old_key:
-            obj[new_key] = obj[old_key]
-            obj.pop(old_key)
+        if key == from_old_key:
+            obj[to_new_key] = obj[from_old_key]
+            obj.pop(from_old_key)
             break
         elif isinstance(value,dict):
-            change_key(value,old_key,new_key)
+            change_key(value,from_old_key,to_new_key)
             
     return obj
