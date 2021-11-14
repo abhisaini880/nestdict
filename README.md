@@ -55,6 +55,38 @@ It offers various functions to simplify your work.
    
    print(is_sedan_and_suv_exist) >> True
    ```
+   
+- *change_value(dict_obj,key,value)* `replaces a particular key's value.`
+    ```py
+    obj = {
+        "cars_owned":{
+             "sedan": 1,
+              "suv": 3,
+              "hatchback": 2
+         },
+     }
+   
+   change_value_of_suv = change_value(obj,"suv",100)
+   
+   print(change_value_of_suv) >> {"cars_owned":{"sedan":1,"suv":100,"hatchback":2},}
+   
+- *change_key(dict,from_old_key, to_new_key)* `replaces a particular key.`
+   ```py
+   
+   obj = {
+      "cars_owned":{
+           "sedan":1,
+           "suv" : 3,
+           "hatchback" : 2
+        }
+    }
+   
+   change_hatchback_key = change_key(obj,"hatchback","tesla")
+   
+   print(change_hatchback_key) >> {"cars_owned":{"sedan" : 1,"suv":3,"tesla":2}}
+   
+   
+   ```
 
 ## Installation
 
