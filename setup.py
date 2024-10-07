@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 HERE = pathlib.Path(__file__).parent
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 PACKAGE_NAME = "nestdict"
 AUTHOR = "Abhishek Saini"
 AUTHOR_EMAIL = "abhisaini880@email.com"
