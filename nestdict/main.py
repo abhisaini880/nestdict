@@ -114,6 +114,9 @@ class BaseNestDict:
 
         return res_list or res_dict
 
+    def __str__(self) -> str:
+        return str(self.to_dict())
+
 
 class ValidationDict(BaseNestDict):
     def __init__(self, data=None, validation={}):
@@ -230,5 +233,5 @@ class NestDict(ValidationDict):
 
 #     n.delete("[0].org_name")
 #     # print(n.flatten_dict)
-#     print(n.to_dict())
+#     print(n)
 #     # print(n.flatten_dict)
