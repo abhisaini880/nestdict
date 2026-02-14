@@ -1,144 +1,232 @@
-# NestDict: Advanced Nested Dictionary Library for Python
+# nestdict
 
-![PyPI](https://img.shields.io/pypi/v/nestdict) ![Python Versions](https://img.shields.io/badge/python-3.6%2B-blue)
+**The Swiss Army knife for nested Python dicts.**
 
-## Table of Contents
+Access, query, transform, and validate nested data — no schemas, no DSLs, just Python.
 
-- [Overview](#overview)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Reference](#api-reference)
-- [Contributing](#contributing)
-- [License](#license)
+> *Pydantic is for data you define. nestdict is for data that arrives.*
 
-## Overview
+![PyPI](https://img.shields.io/pypi/v/nestdict) ![Python](https://img.shields.io/badge/python-3.9%2B-blue) ![Tests](https://img.shields.io/badge/tests-174%20passed-green) ![Coverage](https://img.shields.io/badge/coverage-91%25-brightgreen)
 
-`NestDict` is a powerful Python library that extends the standard dictionary functionality to handle nested dictionaries, providing advanced features such as validation and support for frozen dictionaries. This library simplifies the manipulation of complex data structures, making it an ideal choice for applications that require dynamic data management.
+## The Problem
 
-## Features
+Working with nested dicts in Python is painful:
 
-- **Nested Dictionary Handling**: Seamlessly access and manipulate deeply nested dictionaries.
-- **Validation**: Validate data types based on predefined mappings.
-- **Frozen Dictionaries**: Create immutable nested dictionaries to protect critical data.
-- **List Support**: Manage lists within nested structures effectively.
+```python
+# The .get().get().get() chain of sadness
+city = response.get("data", {}).get("customer", {}).get("address", {}).get("city")
+
+# Or the try/except dance
+try:
+    city = response["data"]["customer"]["address"]["city"]
+except (KeyError, TypeError):
+    city = None
+```
+
+## The Solution
+
+```python
+from nestdict import NestDict
+
+nd = NestDict(api_response)
+city = nd.get("data.customer.address.city")  # Done. Returns None if missing.
+```
 
 ## Installation
 
-You can install `NestDict` using pip:
-
-``` bash
-pip install nestdict
+```bash
+pip install nestdict==2.0.0a1 --pre
 ```
 
-## Usage
-Here’s a quick example of how to use NestDict:
-``` python
+## Quick Start
+
+```python
 from nestdict import NestDict
 
-# Create a nested dictionary
+# Wrap any nested dict or list
 data = {
     "user": {
-        "name": "John Doe",
+        "name": "Alice",
         "age": 30,
-        "address": {
-            "city": "New York",
-            "zip": "10001"
-        }
-    }
+        "address": {"city": "New York", "zip": "10001"}
+    },
+    "tags": ["developer", "python"]
 }
 
-# Initialize NestDict
-nested_dict = NestDict(data)
+nd = NestDict(data)
 
-# Access nested data
-print(nested_dict.get("user.name"))  # Output: John Doe
+# Access with dot paths
+nd["user.name"]                  # 'Alice'
+nd["user.address.city"]          # 'New York'
+nd["tags.[0]"]                   # 'developer'
 
-# Set new values
-nested_dict["user.age"] =  31
+# Safe access with defaults
+nd.get("user.phone")             # None
+nd.get("user.phone", "N/A")     # 'N/A'
 
-# print out dict
-print(nested_dict)
+# Set values (creates intermediates automatically)
+nd["user.email"] = "alice@example.com"
+nd["settings.theme"] = "dark"    # Creates 'settings' dict automatically
 
-# save final dict object
-final_dict = nested_dict.to_dict()
+# Delete values
+del nd["user.address.zip"]
 
-# Validate data
-validation_rules = {
-    "user.age": int,
-    "user.name": str
-}
-nested_dict_with_validation = NestDict(data, validation=validation_rules)
+# Check existence
+"user.name" in nd                # True
+"user.phone" in nd               # False
 
+# Get multiple values at once
+nd.values_at("user.name", "user.age", "user.phone")
+# ['Alice', 30, None]
+
+# Export back to plain dict
+plain = nd.to_dict()
+
+# Flatten to dot-notation keys
+nd.flatten()
+# {'user.name': 'Alice', 'user.age': 30, 'user.address.city': 'New York', ...}
+
+# List all leaf paths
+nd.paths()
+# ['user.name', 'user.age', 'user.address.city', 'user.email', ...]
 ```
-## API Reference
 
-- `get(key_path, default=None)`
-Retrieves the value at the specified key path in the nested dictionary. If the key path does not exist, it returns the specified default value (or `None` if not provided).
+## Functional API
 
-- `__getitem__(key_path)`
-Allows access to the value at the specified key path using bracket notation (e.g., `nested_dict[key_path]`). Raises a `KeyError` if the key path is not found.
+For one-shot operations, use the functional API — no need to create a NestDict:
 
-- `__setitem__(key_path, value)`
-Sets the value at the specified key path using bracket notation (e.g., `nested_dict[key_path] = value`). It validates the value's type according to the validation rules if provided during initialization.
+```python
+from nestdict import get, set_at, delete_at, flatten, unflatten, paths, exists
 
-- `delete(key_path)`
-Deletes the value at the specified key path. If the key path does not exist, it raises a `KeyError`.
+# Direct access on plain dicts
+city = get(api_response, "data.customer.address.city")
+exists(config, "database.host")  # True/False
 
-- `to_dict()`
-Returns the nested structure as a standard dictionary, representing the current state of the data.
+# Immutable transforms (returns new dict, original unchanged)
+updated = set_at(config, "database.port", 5433)
+cleaned = delete_at(user_data, "password")
 
+# Flatten/unflatten
+flat = flatten({"a": {"b": 1, "c": 2}})
+# {'a.b': 1, 'a.c': 2}
 
-### Data Parameter
+nested = unflatten({"a.b": 1, "a.c": 2})
+# {'a': {'b': 1, 'c': 2}}
 
-The **data** parameter is the initial nested dictionary structure that you want to manage using the `NestDict` class. It can be any valid Python dictionary (or list of dictionaries) that you need to work with.
+# All leaf paths
+paths(data)
+# ['user.name', 'user.age', 'user.address.city', ...]
+```
 
-#### Key Points:
-- **Type**: Accepts a `dict` or `list`.
-- **Nested Structure**: You can create deeply nested dictionaries. For example, `{"a": {"b": {"c": 1}}}` is a valid input.
-- **Mutable**: The data is mutable, meaning you can modify it using the available methods like `set`, `delete`, or through direct item access.
+## Works Like a Dict
 
+NestDict implements `collections.abc.MutableMapping`, so it works everywhere a dict does:
 
-### Validation Parameter
+```python
+nd = NestDict({"x": 1, "y": 2})
 
-The **validation** parameter is an optional dictionary used to enforce type checking on the values in your nested dictionary. It allows you to define expected data types for specific keys.
+len(nd)              # 2
+list(nd)             # ['x', 'y']
+dict(nd)             # {'x': 1, 'y': 2}
+bool(nd)             # True
 
-#### Key Points:
-- **Type**: Accepts a `dict` where:
-  - **Keys**: Are the key paths (in dot notation) that you want to validate. For example, `"user.age"` for a nested dictionary structure.
-  - **Values**: Are the expected data types (e.g., `int`, `str`, `list`, `dict`) for those keys.
-- **Validation Check**: When you set a value for a key specified in the validation dictionary, the library checks if the value is of the expected type. If it’s not, a `ValueError` is raised.
-- **Initialization Validation**: The validation is performed both during the initialization of the `NestDict` instance and when using the `set` method.
+# Merge with | operator (Python 3.9+)
+merged = nd | {"z": 3}
+nd |= {"z": 3}
 
-## Contributing Guidelines
+# Copy
+import copy
+shallow = copy.copy(nd)
+deep = copy.deepcopy(nd)
+```
 
-Contributions to NestDict are welcome! To maintain a high standard for our project, please follow these guidelines when contributing:
+## List Support
 
-1. **Fork the Repository**: Start by forking the repository to your account.
+Works with lists at any level, including as the root:
 
-2. **Create a New Branch**: Create a new branch for your feature or bug fix:
-   ```bash
-   git checkout -b feature/YourFeatureName
-    ```
-3. **Make Changes**: Implement your changes and ensure that your code adheres to our coding standards.
+```python
+# Root list
+nd = NestDict([{"name": "Alice"}, {"name": "Bob"}])
+nd["[0].name"]       # 'Alice'
+nd["[1].name"]       # 'Bob'
 
-4. **Write Tests**: If applicable, add unit tests to cover your changes. Ensure that all tests pass before submitting your changes.
+# Nested lists
+data = {"matrix": [[1, 2], [3, 4]]}
+nd = NestDict(data)
+nd["matrix.[1].[0]"]  # 3
 
-5. **Commit Your Changes**: Use clear and concise commit messages that explain the purpose of the changes. Refer to the COMMIT_GUIDELINES.md for detailed commit message conventions.
+# Negative indices
+nd["matrix.[-1].[-1]"]  # 4
+```
 
-6. **Push Your Branch**: Push your changes to your fork:
+## Path Syntax
 
-    ```bash
-    git push origin feature/YourFeatureName
-    ```
-7. **Submit a Pull Request**: Navigate to the original repository and submit a pull request, explaining your changes and the motivation behind them.
+| Pattern | Meaning | Example |
+|---------|---------|---------|
+| `key` | Dict key | `"name"` |
+| `key1.key2` | Nested dict keys | `"user.address.city"` |
+| `[n]` | List index | `"[0]"`, `"[-1]"` |
+| `key.[n]` | List in dict | `"items.[0].name"` |
 
-8. **Respect the License**: Ensure that any contributions you make do not violate the existing license terms. Contributions should not be commercialized without explicit permission.
+## Error Handling
 
-*Thank you for contributing to NestDict!*
+Clear, actionable error messages:
 
-## Commit Guidelines
-We follow specific conventions for our commit messages to maintain clarity and consistency. Please refer to the [COMMIT_GUIDELINES.md](COMMIT_GUIDELINES.md) file for detailed commit message conventions.
+```python
+from nestdict import NestDict, PathNotFoundError
+
+nd = NestDict({"user": {"name": "Alice"}})
+
+try:
+    nd["user.address.city"]
+except PathNotFoundError as e:
+    print(e)
+    # Path not found: 'user.address.city' — key 'address' does not exist at user
+```
+
+Exception hierarchy:
+- `NestDictError` — base for all nestdict errors
+- `PathError` — malformed path syntax
+- `PathNotFoundError` (also a `KeyError`) — path doesn't exist
+- `ValidationError` (also a `ValueError`) — validation failure
+- `FrozenPathError` (also a `TypeError`) — frozen path mutation
+
+## Roadmap
+
+nestdict v2 is a complete rewrite. Here's what's coming:
+
+- **v2.0.0a1** (current): Core CRUD, flatten/unflatten, functional API
+- **v2.0.0a2**: Wildcard queries (`users.*.email`, `**.name`), pick/omit
+- **v2.0.0a3**: Deep merge with strategies, structural diff
+- **v2.0.0b1**: Validation, frozen paths, schema inference, serialization
+- **v2.0.0**: Stable release
+
+## Why Not...?
+
+| Library | What it does | What nestdict adds |
+|---------|-------------|-------------------|
+| **Pydantic** | Schema-first validation | nestdict works without defining models — for data that arrives |
+| **python-box** | Dot attribute access | nestdict adds flatten, paths, functional API, and (coming) query/merge/diff |
+| **glom** | Spec-based transforms | nestdict uses simple dot-path strings, not a DSL |
+| **jmespath** | JSON query language | nestdict reads AND writes — not just queries |
+
+## Development
+
+```bash
+# Clone and install
+git clone https://github.com/abhisaini880/nestdict.git
+cd nestdict
+python -m venv .venv && source .venv/bin/activate
+pip install -e ".[dev]"
+
+# Run tests
+pytest --cov=nestdict
+
+# Lint and type check
+ruff check nestdict/ tests/
+mypy nestdict/
+```
 
 ## License
-This project is licensed under the MIT License. See the [License](LICENSE) file for more details.
+
+MIT License. See [LICENSE](LICENSE) for details.
