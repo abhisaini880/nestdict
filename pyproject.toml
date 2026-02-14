@@ -1,0 +1,80 @@
+[build-system]
+requires = ["setuptools>=68.0", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nestdict"
+version = "2.0.0a1"
+description = "The Swiss Army knife for nested Python dicts. Access, query, transform, and validate nested data — no schemas, no DSLs, just Python."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [
+    { name = "Abhishek Saini", email = "abhisaini880@email.com" },
+]
+keywords = [
+    "nested",
+    "dictionary",
+    "dict",
+    "nested-dict",
+    "dot-notation",
+    "flatten",
+    "merge",
+    "diff",
+    "query",
+    "json",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/abhisaini880/nestdict"
+Repository = "https://github.com/abhisaini880/nestdict"
+Issues = "https://github.com/abhisaini880/nestdict/issues"
+Changelog = "https://github.com/abhisaini880/nestdict/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.4.0",
+    "mypy>=1.10",
+]
+
+[tool.setuptools.packages.find]
+include = ["nestdict*"]
+
+[tool.ruff]
+target-version = "py39"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+]
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
